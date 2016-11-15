@@ -6,6 +6,15 @@ import { Link } from 'react-router';
 class PostsNew extends Component {
 	static contextTypes = {
 		router: PropTypes.object
+	};
+
+	onSubmit(props){
+		this.props.createPost(props)
+			.then( () => {
+				//blog post has been created, navigaet the user to the index
+				// by calling this.context.router.push with the new path to navigate to
+				this.context.router.push('/');
+			} )
 	}
 
 	render() {
@@ -14,7 +23,7 @@ class PostsNew extends Component {
 		const { fields: {title, categories, content}, handleSubmit } = this.props;
 		console.log(title);
 		return (
-			<form onSubmit={handleSubmit(this.props.createPost)} >
+			<form onSubmit={handleSubmit(this.onSubmit.bind(this))} >
 				<h3>Create A New Post </h3>
 				<div className={`form-group ${title.touched && title.invalid ? 'has-danger' : ''}`}>
 					<label>Title</label>
@@ -24,7 +33,7 @@ class PostsNew extends Component {
 					</div>
 				</div>
 				<div className={`form-group ${categories.touched && categories.invalid ? 'has-danger' : ''}`}>
-					<label>Categories</label>
+					<label>Categories </label>
 					<input type='text' className='form-control' {...categories}/>
 					<div className='text-help'>
 						{categories.touched? categories.error : ''}
